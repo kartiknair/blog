@@ -1,7 +1,6 @@
 import React from "react"
 import { Link } from "gatsby"
-
-import { rhythm, scale } from "../utils/typography"
+import Toggle from "./themeToggle"
 
 const Layout = ({ location, title, children }) => {
   const rootPath = `${__PATH_PREFIX__}/`
@@ -11,9 +10,7 @@ const Layout = ({ location, title, children }) => {
     header = (
       <h1
         style={{
-          ...scale(1.5),
-          marginBottom: rhythm(1.5),
-          marginTop: 0,
+          margin: 0,
         }}
       >
         <Link
@@ -21,6 +18,7 @@ const Layout = ({ location, title, children }) => {
             boxShadow: `none`,
             textDecoration: `none`,
             color: `inherit`,
+            fontSize: `inherit`,
           }}
           to={`/`}
         >
@@ -30,41 +28,36 @@ const Layout = ({ location, title, children }) => {
     )
   } else {
     header = (
-      <h3
-        style={{
-          fontFamily: `Montserrat, sans-serif`,
-          marginTop: 0,
-        }}
-      >
-        <Link
-          style={{
-            boxShadow: `none`,
-            textDecoration: `none`,
-            color: `inherit`,
-          }}
-          to={`/`}
-        >
-          {title}
-        </Link>
+      <h3 style={{ margin: 0 }}>
+        <Link to={`/`}>Go back home</Link>
       </h3>
     )
   }
   return (
-    <div
-      style={{
-        marginLeft: `auto`,
-        marginRight: `auto`,
-        maxWidth: rhythm(24),
-        padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
-      }}
-    >
-      <header>{header}</header>
-      <main>{children}</main>
-      <footer>
-        © {new Date().getFullYear()}, Built with
-        {` `}
-        <a href="https://www.gatsbyjs.org">Gatsby</a>
-      </footer>
+    <div className="grotesk">
+      <div className="parent">
+        <header
+          style={{
+            display: `flex`,
+            alignItems: `center`,
+            margin: `2% 0`,
+          }}
+        >
+          {header}
+          <Toggle />
+        </header>
+
+        <main>{children}</main>
+        <footer>
+          <p>
+            © {new Date().getFullYear()}{" "}
+            <a href="https://kartikn.me">Kartik Nair</a>, Built with
+            {` `}
+            <a href="https://www.gatsbyjs.org">Gatsby</a> &{" "}
+            <a href="https://grotesk.now.sh">Grotesk</a>
+          </p>
+        </footer>
+      </div>
     </div>
   )
 }

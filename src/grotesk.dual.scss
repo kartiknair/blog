@@ -1,0 +1,263 @@
+/* Variable Declarations */
+@import "./fonts.scss";
+
+// Light Colors
+$light-bg: #ffffff;
+$light-fg-body: #2d3748;
+$light-fg-headings: #000000;
+$light-hr-color: rgba(0, 0, 0, 0.07);
+$light-a-color: #0092cc;
+$light-pre-bg: rgba(0, 0, 0, 0.04);
+$light-pre-color: $light-fg-body;
+$light-inline-code-bg: rgba(0, 0, 0, 0.04);
+$light-inline-code-color: hsl(0, 79%, 63%);
+$light-quote-bg: $light-bg;
+$light-quote-border: #0092cc;
+$light-quote-color: #6a727c;
+
+// Dark Colors
+$dark-bg: #131217;
+$dark-fg-body: rgba(255, 255, 255, 0.7);
+$dark-fg-headings: #e6e5e9;
+$dark-hr-color: rgba(255, 255, 255, 0.2);
+$dark-a-color: #0092cc;
+$dark-pre-bg: #1b191f;
+$dark-pre-color: $dark-fg-body;
+$dark-inline-code-bg: #1b191f;
+$dark-inline-code-color: #ef6b6b;
+$dark-quote-bg: $dark-bg;
+$dark-quote-border: $dark-a-color;
+$dark-quote-color: #6a727c;
+
+html,
+body {
+  width: 100%;
+}
+
+.light {
+  background: $light-bg;
+  color: $light-fg-body;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: $light-fg-headings;
+  }
+
+  pre {
+    background-color: $light-pre-bg;
+    code {
+      color: $light-pre-color;
+    }
+  }
+
+  code {
+    background-color: $light-inline-code-bg;
+    color: $light-inline-code-color;
+  }
+
+  hr {
+    background-color: $light-hr-color;
+  }
+
+  a {
+    color: $light-a-color;
+  }
+
+  blockquote {
+    background-color: $light-quote-bg;
+    color: $light-quote-color;
+    border-left: 0.4em solid $light-quote-border;
+  }
+
+  footer {
+    border-top: 1px solid $light-hr-color;
+  }
+}
+
+.dark {
+  background: $dark-bg;
+  color: $dark-fg-body;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: $dark-fg-headings;
+  }
+
+  pre {
+    background-color: $dark-pre-bg;
+    code {
+      color: $dark-pre-color;
+    }
+  }
+
+  code {
+    background-color: $dark-inline-code-bg;
+    color: $dark-inline-code-color;
+  }
+
+  hr {
+    background-color: $dark-hr-color;
+  }
+
+  a {
+    color: $dark-a-color;
+  }
+
+  blockquote {
+    background-color: $dark-quote-bg;
+    color: $dark-quote-color;
+    border-left: 0.4em solid $dark-quote-border;
+  }
+
+  footer {
+    border-top: 1px solid $dark-hr-color;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.grotesk {
+  width: 100%;
+  height: 100%;
+  font-family: $font-fam-main;
+  line-height: $line-ht-main;
+
+  // Type Scale
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.7411rem;
+  }
+
+  h3 {
+    font-size: 1.5157rem;
+  }
+
+  h4 {
+    font-size: 1.3195rem;
+  }
+
+  h5 {
+    font-size: 1.1487rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  p,
+  a,
+  ul,
+  ol,
+  li {
+    font-size: 1rem;
+  }
+
+  blockquote,
+  blockquote p,
+  q,
+  q p,
+  code,
+  kbd,
+  mark {
+    font-size: 0.9rem;
+  }
+
+  blockquote cite,
+  q cite {
+    font-size: 0.7rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  a,
+  blockquote,
+  q,
+  hr {
+    margin: 1rem 0;
+  }
+
+  blockquote p {
+    margin: 0;
+  }
+
+  ul,
+  ol {
+    margin: 0.5rem 1.5rem;
+  }
+
+  li {
+    margin: 0.2rem 0;
+  }
+
+  pre {
+    overflow: auto;
+    padding: 1.5rem;
+    code {
+      background: none;
+      padding: 0;
+      line-height: 1;
+    }
+  }
+
+  code {
+    padding: 0.2rem;
+    border-radius: 0.2rem;
+  }
+
+  mark {
+    padding: 0.2rem;
+  }
+
+  hr {
+    height: 1px;
+    border: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  blockquote {
+    padding: 0.4rem 0;
+    padding-left: 1.5rem;
+    font-style: italic;
+    a {
+      font-size: inherit;
+    }
+  }
+
+  footer {
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    margin-top: 2rem;
+    p,
+    a {
+      font-size: 0.9rem;
+    }
+  }
+}
