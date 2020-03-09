@@ -450,7 +450,7 @@ $quote-color: #6a727c;
 
 I also customized the `fonts.scss` file that came with grotesk. Here's how it looks like now:
 
-```css
+```scss
 @font-face {
   font-family: lyon;
   src: url("../fonts/LyonDisplay-Bold.otf");
@@ -458,14 +458,14 @@ I also customized the `fonts.scss` file that came with grotesk. Here's how it lo
 }
 
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&display=swap");
-```
 
 $font-fam-main: "EB Garamond", serif;
 $font-fam-headings: lyon, serif;
 $font-fam-mono: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
-    monospace;
+  monospace;
 $line-ht-main: 1.5;
-\$line-ht-mono: 1;
+$line-ht-mono: 1;
+```
 
 As you can see I've imported two fonts for this blog. Lyon Display which is locally hosted & EB Garamond which is a Google Font.
 
