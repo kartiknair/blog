@@ -4,7 +4,7 @@ date: 1583777940720
 description: The process of building a simple static site generator powered by markdown using only nodejs.
 ---
 
-This blog is built using [Gatsby.js](https://gatsbyjs.org) an awesome static site generator for React (well it was built using Gatsby but I ended up switching to this project as you'll find out at the end). Gatsby was pretty easy to pick up and all I had to do was customize the gatsby-blog-starter to get something great. But I was curious how the generator so I decided to try and build a simple/barebones static site generator using nodejs.
+This blog is built using [Gatsby.js](https://gatsbyjs.org) an awesome static site generator for React (well it was built using Gatsby but I ended up switching to this project as you'll find out at the end). Gatsby was pretty easy to pick up and all I had to do was customize the gatsby-blog-starter to get something great. But I was curious how the generator so I decided to try and build a simple/barebones static site generator using nodejs. Feel free to follow along with the code on [GitHub](https://github.com/kartiknair/blog).
 
 ### Why SSGs?
 

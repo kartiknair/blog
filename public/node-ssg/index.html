@@ -21,7 +21,7 @@
                 <h1>Building a simple static site generator in node.js</h1>
                 <p>Mon Mar 09 2020</p>
                 <hr />
-                <p>This blog is built using <a href="https://gatsbyjs.org">Gatsby.js</a> an awesome static site generator for React (well it was built using Gatsby but I ended up switching to this project as you&#39;ll find out at the end). Gatsby was pretty easy to pick up and all I had to do was customize the gatsby-blog-starter to get something great. But I was curious how the generator so I decided to try and build a simple/barebones static site generator using nodejs.</p>
+                <p>This blog is built using <a href="https://gatsbyjs.org">Gatsby.js</a> an awesome static site generator for React (well it was built using Gatsby but I ended up switching to this project as you&#39;ll find out at the end). Gatsby was pretty easy to pick up and all I had to do was customize the gatsby-blog-starter to get something great. But I was curious how the generator so I decided to try and build a simple/barebones static site generator using nodejs. Feel free to follow along with the code on <a href="https://github.com/kartiknair/blog">GitHub</a>.</p>
 <h3 id="why-ssgs">Why SSGs?</h3>
 <p>I love static site generators a lot because it allows you to use whatever heavy/bloated framework you want but the end result will still be just simple and light HTML, &amp; CSS. This gives a sense of freedom which we wouldn&#39;t normally have if we were dealing with a <code>create-react-app</code> for example.</p>
 <p>For this project here&#39;s the lighthouse score for the final result:</p>
@@ -342,19 +342,20 @@ addHomePage(posts);</code></pre>
 <span class="hljs-variable">$quote-border</span>: <span class="hljs-number">#8a4baf</span>;
 <span class="hljs-variable">$quote-color</span>: <span class="hljs-number">#6a727c</span>;</code></pre>
 <p>I also customized the <code>fonts.scss</code> file that came with grotesk. Here&#39;s how it looks like now:</p>
-<pre><code class="language-css"><span class="hljs-keyword">@font-face</span> {
+<pre><code class="language-scss"><span class="hljs-keyword">@font-face</span> {
   <span class="hljs-attribute">font-family</span>: lyon;
-  <span class="hljs-attribute">src</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">"../fonts/LyonDisplay-Bold.otf"</span>);
+  <span class="hljs-attribute">src</span>: url(<span class="hljs-string">"../fonts/LyonDisplay-Bold.otf"</span>);
   <span class="hljs-attribute">font-weight</span>: <span class="hljs-number">800</span>;
 }
 
-<span class="hljs-keyword">@import</span> url(<span class="hljs-string">"https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&amp;display=swap"</span>);</code></pre>
-<p>$font-fam-main: &quot;EB Garamond&quot;, serif;
-$font-fam-headings: lyon, serif;
-$font-fam-mono: Menlo, Monaco, Consolas, &quot;Liberation Mono&quot;, &quot;Courier New&quot;,
-    monospace;
-$line-ht-main: 1.5;
-$line-ht-mono: 1;</p>
+<span class="hljs-keyword">@import</span> url(<span class="hljs-string">"https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&amp;display=swap"</span>);
+
+<span class="hljs-variable">$font-fam-main</span>: <span class="hljs-string">"EB Garamond"</span>, serif;
+<span class="hljs-variable">$font-fam-headings</span>: lyon, serif;
+<span class="hljs-variable">$font-fam-mono</span>: Menlo, Monaco, Consolas, <span class="hljs-string">"Liberation Mono"</span>, <span class="hljs-string">"Courier New"</span>,
+  monospace;
+<span class="hljs-variable">$line-ht-main</span>: <span class="hljs-number">1.5</span>;
+<span class="hljs-variable">$line-ht-mono</span>: <span class="hljs-number">1</span>;</code></pre>
 <p>As you can see I&#39;ve imported two fonts for this blog. Lyon Display which is locally hosted &amp; EB Garamond which is a Google Font.</p>
 <p>That&#39;s it for the styling. It ended up looking way better than I expected you can check it out live <a href="https://blog.kartikn.me">here</a>, but if you don&#39;t wanna visit it live here&#39;s an image:</p>
 <p><img src="../assets/images/node-ssg-2.png" alt="An image of the final result"></p>

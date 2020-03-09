@@ -17,11 +17,9 @@ const homepage = posts => `
             <header>
                 <h1>${config.blogName}</h1>
                 <p>—</p>
-                <p>This blog is written by ${config.authorName}, ${
-  config.authorDescription
-}. To find out what he's up to <a href="${
-  config.authorTwitter
-}">follow him on twtter</a></p>
+                <p>This blog is written by <a href="${config.authorWebsite}">${
+  config.authorName
+}</a>, ${config.authorDescription}.</p>
                 <hr />
             </header>
             
