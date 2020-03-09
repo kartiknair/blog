@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="The reason I built grotesk was to stop myself from repeating the same typographic styles in every project. Learn more about how I did it in the post." />
+        <link rel="preload" as="style" onload="this.rel = 'stylesheet'" href="../assets/styles/grotesk.light.css">
+        <link rel="preload" as="style" onload="this.rel = 'stylesheet'" href="../assets/styles/highlights.css">
+        <link rel="preload" as="style" onload="this.rel = 'stylesheet'" href="../assets/styles/main.css">
+        <title>How I built ‘grotesk’</title>
+    </head>
+    <body>
+        <div class="grotesk">
+            <header>
+                <a href="/">Go back home</a>
+                <p>—</p>
+            </header>
+
+            <div class="content">
+                <h1>How I built ‘grotesk’</h1>
+                <p>Mon Mar 09 2020</p>
+                <hr />
+                <h3 id="what-is-grotesk">What is grotesk?</h3>
+<p>Grotesk is a css library and react component that aims to make web typography simple. The reason I built it is because I&#39;ve noticed that I start almost every static website off with the same set of themes or typographic rules, so I decided to build a tiny library that I can just plug into my next project easily. Since I mostly only work on react applications or plain ol&#39; static websites I made a react component and a css library.</p>
+<h3 id="goals">Goals</h3>
+<p>The goal with grotesk was not to be an end all of styling it&#39;s supposed to be a very minimal stater that can support your regular styling. For a single theme the minified css file comes in at only <code>1.8kb</code> which I think is quite amazing.</p>
+<p>It also strives to make customization as easy as possible offering more than 15 different variables you can work with.</p>
+<h3 id="how-it-works">How it works</h3>
+<p>I built grotesk.css using scss for variables and customization (because of css custom properties&#39; comparatively low browser support). This was the first project I used scss in and I have to say the workflow with the live sass compiler in VS Code is very smooth and the dev experience was very enjoyable.</p>
+<p>Since this was my first ever npm package I decided to go with something simple for the react component so I decided to use <code>create-react-library</code> which made it extremely easy to build and publish the component. For the styling and customization I decided to go with emotion as I wanted something simple yet powerful that could be dynamically themed.</p>
+<h3 id="customization">Customization</h3>
+<p>Customization was very simple to implement in the css library because all the user had to do was change the scss variables at the top of the file and the rest would be managed by the power of scss. For the react component however it was a bit more complex.</p>
+<p>The way I decided to go about it was to allow the user to add an optional <code>theme</code> prop to their <code>&lt;Grotesk&gt;</code> component. It takes an object that allows them to change the variables and if any properties are excluded they revert to the default.</p>
+<p>Here is an example theme:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> theme = {
+  <span class="hljs-attr">bg</span>: <span class="hljs-string">"#ffffff"</span>,
+  <span class="hljs-attr">fgBody</span>: <span class="hljs-string">"#2d3748"</span>,
+  <span class="hljs-attr">fgHeadings</span>: <span class="hljs-string">"#000000"</span>,
+  <span class="hljs-attr">hrColor</span>: <span class="hljs-string">"rgba(0, 0, 0, 0.07)"</span>,
+  <span class="hljs-attr">linkColor</span>: <span class="hljs-string">"#8a4baf"</span>,
+  <span class="hljs-attr">preBg</span>: <span class="hljs-string">"rgba(0, 0, 0, 0.04)"</span>,
+  <span class="hljs-attr">preColor</span>: <span class="hljs-string">"#2d3748"</span>,
+  <span class="hljs-attr">inlineCodeBg</span>: <span class="hljs-string">"rgba(0, 0, 0, 0.04)"</span>,
+  <span class="hljs-attr">inlineCodeColor</span>: <span class="hljs-string">"hsl(0, 79 %, 63 %)"</span>,
+  <span class="hljs-attr">quoteBg</span>: <span class="hljs-string">"#ffffff"</span>,
+  <span class="hljs-attr">quoteBorder</span>: <span class="hljs-string">"#8a4baf"</span>,
+  <span class="hljs-attr">quoteColor</span>: <span class="hljs-string">"#6a727c"</span>,
+  <span class="hljs-attr">fontFamMain</span>: <span class="hljs-string">"space-grotesk, sans-serif"</span>,
+  <span class="hljs-attr">fontFamMono</span>:
+    <span class="hljs-string">'Menlo, Monaco, Consolas, "Liberation Mono", "Courier New" monospace'</span>,
+  <span class="hljs-attr">lineHtMain</span>: <span class="hljs-string">"1.5"</span>,
+  <span class="hljs-attr">lineHtMono</span>: <span class="hljs-string">"1"</span>
+};</code></pre>
+<h3 id="grotesk-vs-groteskcss">grotesk vs grotesk.css</h3>
+<p>Which one is for you? I would personally recommend the css library for almost all people. Even if you are using a react project, for most cases the css library is good enough. The only cases where I would recommend the react component is when your project already uses emotion or if you are planning to do a lot of dynamic theming (like more than two themes).</p>
+<h3 id="my-process">My process</h3>
+<p>For the css library my process was very simple, all I did was first of all create the html file with all the content i wanted to style and then I started off working on <code>grotesk.light.scss</code> . Since I use VS code the compiling was very simple with the amazing Live Sass compiler plugin (highly recommend it).</p>
+<p>For the react component however the process was a bit more complicated but as I mentioned above emotion and create-react-library really do help out, especially if you&#39;re a beginner like me.</p>
+<h3 id="final-notes">Final notes</h3>
+<p>I&#39;m sure there&#39;s probably some bugs in there that I haven&#39;t yet encountered and I might be doing many other things wrong but that&#39;s the reason I&#39;ve open sourced the project. Just head over to <a href="https://github.com/kartiknair/grotesk">github</a> if you encounter any bugs and open an issue and I&#39;ll look into it asap. Also if you think you can improve grotesk just open a PR with your contribution and I&#39;ll add it in. Let&#39;s take full advantage of the power of open source guys.</p>
+<p>P.S: I would love to add a &quot;Websites that use grotesk&quot; section to the README, so if you&#39;ve made a website using grotesk or if you have any feature requests just DM me over at twitter ([at]nairkartik_), I would love to hear from you. Peace. ✌️</p>
+
+            </div>
+
+            <footer>
+                <p>© 2020 Kartik Nair, Find the code on <a href="github.com/kartiknair/blog">GitHub</a></p>
+            </footer>
+        </div>
+    </body>
+</html>

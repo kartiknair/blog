@@ -1,0 +1,15 @@
+@font-face {
+  font-family: lyon;
+  src: url("../fonts/LyonDisplay-Bold.otf");
+  font-weight: 800;
+  font-display: swap;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&display=swap");
+
+$font-fam-main: "EB Garamond", serif;
+$font-fam-headings: lyon, serif;
+$font-fam-mono: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+  monospace;
+$line-ht-main: 1.5;
+$line-ht-mono: 1;

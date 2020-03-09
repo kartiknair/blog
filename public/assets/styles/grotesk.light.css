@@ -1,0 +1,198 @@
+/* Variable Declarations */
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&display=swap");
+@font-face {
+  font-family: lyon;
+  src: url("../fonts/LyonDisplay-Bold.otf");
+  font-weight: 800;
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  background: #1e3b5a;
+}
+
+.grotesk {
+  width: 100%;
+  height: 100%;
+  font-family: "EB Garamond", serif;
+  line-height: 1.5;
+}
+
+.grotesk h1 {
+  font-size: 2rem;
+}
+
+.grotesk h2 {
+  font-size: 1.7411rem;
+}
+
+.grotesk h3 {
+  font-size: 1.5157rem;
+}
+
+.grotesk h4 {
+  font-size: 1.3195rem;
+}
+
+.grotesk h5 {
+  font-size: 1.1487rem;
+}
+
+.grotesk h6 {
+  font-size: 1rem;
+}
+
+.grotesk p,
+.grotesk a,
+.grotesk ul,
+.grotesk ol,
+.grotesk li {
+  font-size: 1rem;
+}
+
+.grotesk blockquote,
+.grotesk q,
+.grotesk code,
+.grotesk kbd,
+.grotesk mark,
+.grotesk small {
+  font-size: 0.8rem;
+}
+
+.grotesk blockquote cite,
+.grotesk q cite {
+  font-size: 0.7rem;
+}
+
+.grotesk h1,
+.grotesk h2,
+.grotesk h3,
+.grotesk h4,
+.grotesk h5,
+.grotesk h6 {
+  color: #c1d6df;
+  font-family: lyon, serif;
+}
+
+.grotesk p,
+.grotesk ul,
+.grotesk ol,
+.grotesk li,
+.grotesk blockquote,
+.grotesk q {
+  color: #99b7c3;
+}
+
+.grotesk h1,
+.grotesk h2,
+.grotesk h3,
+.grotesk h4,
+.grotesk h5,
+.grotesk h6,
+.grotesk p,
+.grotesk a,
+.grotesk blockquote,
+.grotesk q,
+.grotesk hr {
+  margin: 1rem 0;
+}
+
+.grotesk ul,
+.grotesk ol {
+  margin: 0.5rem 1.5rem;
+}
+
+.grotesk li {
+  margin: 0.2rem 0;
+}
+
+.grotesk pre {
+  background-color: rgba(153, 183, 195, 0.07);
+  overflow: auto;
+  padding: 1.5rem 2rem;
+}
+
+.grotesk pre code {
+  background: none;
+  color: #99b7c3;
+  padding: 0;
+}
+
+.grotesk code {
+  background-color: rgba(153, 183, 195, 0.07);
+  color: #c1d6df;
+  padding: 0.2rem;
+  border-radius: 0.2rem;
+}
+
+.grotesk mark {
+  padding: 0.2rem;
+}
+
+.grotesk hr {
+  height: 1px;
+  background-color: rgba(153, 183, 195, 0.2);
+  border: none;
+}
+
+.grotesk a {
+  color: #d8e9f0;
+  text-decoration: none;
+}
+
+.grotesk a:hover {
+  text-decoration: underline;
+}
+
+.grotesk blockquote {
+  background-color: #1e3b5a;
+  color: #6a727c;
+  border-left: 0.4em solid #8a4baf;
+  padding: 0.4rem 0;
+  padding-left: 1.5rem;
+  font-style: italic;
+}
+
+.grotesk blockquote a {
+  font-size: inherit;
+}
+
+.grotesk footer {
+  width: 100%;
+  padding: 0.8rem;
+  border-top: 1px solid rgba(153, 183, 195, 0.2);
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.grotesk footer p,
+.grotesk footer a {
+  font-size: 0.8rem;
+}
+
+.grotesk * a {
+  font-size: inherit;
+}
+
+.grotesk small {
+  color: #99b7c3;
+}
+
+.grotesk h1 a,
+.grotesk h2 a,
+.grotesk h3 a,
+.grotesk h4 a,
+.grotesk h5 a,
+.grotesk h6 a {
+  color: inherit;
+}
+/*# sourceMappingURL=grotesk.light.css.map */

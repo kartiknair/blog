@@ -1,0 +1,208 @@
+/* Variable Declarations */
+@import "./fonts.scss";
+
+// Colors
+$bg: #1e3b5a;
+$fg-body: #99b7c3;
+$fg-headings: #c1d6df;
+
+$hr-color: rgba(153, 183, 195, 0.2);
+
+$a-color: #d8e9f0;
+
+$pre-bg: rgba(153, 183, 195, 0.07);
+$pre-color: $fg-body;
+
+$inline-code-bg: rgba(153, 183, 195, 0.07);
+$inline-code-color: #c1d6df;
+
+$quote-bg: $bg;
+$quote-border: #8a4baf;
+$quote-color: #6a727c;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  background: $bg;
+}
+
+.grotesk {
+  width: 100%;
+  height: 100%;
+  font-family: $font-fam-main;
+  line-height: $line-ht-main;
+
+  // Type Scale
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.7411rem;
+  }
+
+  h3 {
+    font-size: 1.5157rem;
+  }
+
+  h4 {
+    font-size: 1.3195rem;
+  }
+
+  h5 {
+    font-size: 1.1487rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  p,
+  a,
+  ul,
+  ol,
+  li {
+    font-size: 1rem;
+  }
+
+  blockquote,
+  q,
+  code,
+  kbd,
+  mark,
+  small {
+    font-size: 0.8rem;
+  }
+
+  blockquote cite,
+  q cite {
+    font-size: 0.7rem;
+  }
+
+  // Text Styling
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: $fg-headings;
+    font-family: $font-fam-headings;
+  }
+
+  p,
+  ul,
+  ol,
+  li,
+  blockquote,
+  q {
+    color: $fg-body;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  a,
+  blockquote,
+  q,
+  hr {
+    margin: 1rem 0;
+  }
+
+  ul,
+  ol {
+    margin: 0.5rem 1.5rem;
+  }
+
+  li {
+    margin: 0.2rem 0;
+  }
+
+  pre {
+    background-color: $pre-bg;
+    overflow: auto;
+    padding: 1.5rem 2rem;
+    code {
+      background: none;
+      color: $pre-color;
+      padding: 0;
+    }
+  }
+
+  code {
+    background-color: $inline-code-bg;
+    color: $inline-code-color;
+    padding: 0.2rem;
+    border-radius: 0.2rem;
+  }
+
+  mark {
+    padding: 0.2rem;
+  }
+
+  hr {
+    height: 1px;
+    background-color: $hr-color;
+    border: none;
+  }
+
+  a {
+    color: $a-color;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  blockquote {
+    background-color: $quote-bg;
+    color: $quote-color;
+    border-left: 0.4em solid $quote-border;
+    padding: 0.4rem 0;
+    padding-left: 1.5rem;
+    font-style: italic;
+    a {
+      font-size: inherit;
+    }
+  }
+
+  footer {
+    width: 100%;
+    padding: 0.8rem;
+    border-top: 1px solid $hr-color;
+    margin-top: 2rem;
+    text-align: center;
+    p,
+    a {
+      font-size: 0.8rem;
+    }
+  }
+
+  * a {
+    font-size: inherit;
+  }
+
+  small {
+    color: $fg-body;
+  }
+
+  h1 a,
+  h2 a,
+  h3 a,
+  h4 a,
+  h5 a,
+  h6 a {
+    color: inherit;
+  }
+}
