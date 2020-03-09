@@ -1,0 +1,374 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="The process of building a simple static site generator powered by markdown using only nodejs." />
+        <link rel="stylesheet" href="../assets/styles/grotesk.light.min.css">
+        <link rel="stylesheet" href="../assets/styles/highlights.min.css">
+        <link rel="stylesheet" href="../assets/styles/main.min.css">
+        <title>Building a simple static site generator in node.js</title>
+    </head>
+    <body>
+        <div class="grotesk">
+            <header>
+                <a href="/">Go back home</a>
+                <p>—</p>
+            </header>
+
+            <div class="content">
+                <h1>Building a simple static site generator in node.js</h1>
+                <p>Mon Mar 09 2020</p>
+                <hr />
+                <p>This blog is built using <a href="https://gatsbyjs.org">Gatsby.js</a> an awesome static site generator for React (well it was built using Gatsby but I ended up switching to this project as you&#39;ll find out at the end). Gatsby was pretty easy to pick up and all I had to do was customize the gatsby-blog-starter to get something great. But I was curious how the generator so I decided to try and build a simple/barebones static site generator using nodejs.</p>
+<h3 id="why-ssgs">Why SSGs?</h3>
+<p>I love static site generators a lot because it allows you to use whatever heavy/bloated framework you want but the end result will still be just simple and light HTML, &amp; CSS. This gives a sense of freedom which we wouldn&#39;t normally have if we were dealing with a <code>create-react-app</code> for example.</p>
+<p>For this project here&#39;s the lighthouse score for the final result:</p>
+<p><img src="../assets/images/node-ssg-1.png" alt="The lighthouse score for this website (Shows 99 100 100 100)"></p>
+<p>I know right! Pretty amazing. The only reason it didn&#39;t ace it was because of the heavy fonts but that&#39;s fine because they add enough aesthetic value for me to keep them.</p>
+<h3 id="setup">Setup</h3>
+<p>So let&#39;s get started! Open up your command line and navigate to where you would like to make your project and then use the following commands to create a new nodejs project (these are for windows I&#39;m sure you can translate them over to your OS).</p>
+<pre><code class="language-bash">mkdir node-ssg &amp;&amp; <span class="hljs-built_in">cd</span> node-ssg
+npm init -y</code></pre>
+<p>Now we&#39;re gonna install some packages that are gonna make our life a hell of a lot easier while dealing with the data. The packages are: <strong>front-matter</strong> for extracting the yaml front matter from our posts, <strong>marked</strong> for converting markdown to html, and <strong>highlight.js</strong> for syntax highlighting in code. We can install all of these using the following command:</p>
+<pre><code class="language-bash">npm i front-matter marked highlight.js</code></pre>
+<p>Alright now we can start with our project.</p>
+<h3 id="the-build-script">The build script</h3>
+<p>Let&#39;s think about what we wanna do first of all. So we want a build script that takes all the markdown posts from the content directory and spits out static html files in the public directory.</p>
+<p>First of all let&#39;s create the script that will run when we call <code>build</code>. We&#39;ll put all our source code in the <code>src</code> directory so go ahead and make that in the root of your project. Then open up the project in your favourite code editor (I&#39;m using VS Code) and add in a JavaScript file called <code>index.js</code>. Now we can add our <code>build</code> script to our package.json simply calling using node to run our index.js file. Your package.json should now look like this:</p>
+<pre><code class="language-json">{
+  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"planar"</span>,
+  <span class="hljs-attr">"version"</span>: <span class="hljs-string">"1.0.0"</span>,
+  <span class="hljs-attr">"description"</span>: <span class="hljs-string">""</span>,
+  <span class="hljs-attr">"main"</span>: <span class="hljs-string">"index.js"</span>,
+  <span class="hljs-attr">"scripts"</span>: {
+    <span class="hljs-attr">"build"</span>: <span class="hljs-string">"node ./src/index.js"</span>
+  },
+  <span class="hljs-attr">"keywords"</span>: [],
+  <span class="hljs-attr">"author"</span>: <span class="hljs-string">""</span>,
+  <span class="hljs-attr">"license"</span>: <span class="hljs-string">"ISC"</span>,
+  <span class="hljs-attr">"dependencies"</span>: {
+    <span class="hljs-attr">"front-matter"</span>: <span class="hljs-string">"^3.1.0"</span>,
+    <span class="hljs-attr">"highlight.js"</span>: <span class="hljs-string">"^9.18.1"</span>,
+    <span class="hljs-attr">"marked"</span>: <span class="hljs-string">"^0.8.0"</span>
+  }
+}</code></pre>
+<p>Great now we can call <code>npm run build</code> in our project and it&#39;ll run our <code>index.js</code> file. Only problem is that our file doesn&#39;t do anything yet.</p>
+<p>For testing purposes I&#39;m going to create a content folder with my own blog posts. Since my current blog is also built using a static site generator I can just copy my content folder from there.</p>
+<h3 id="decisions-to-make">Decisions to make</h3>
+<p>Alright there are many decisions you should make before starting for example how should posts be stored? Should they be stored in their own folder or just as <code>.md</code> file? Where do you store images? And a lot more.</p>
+<p>But since this projects scope is not very large I&#39;m gonna go with a very simple file tree. All posts will be stored in the content directory as markdown files (<code>.md</code>) &amp; other resources (like images) can be stored in <code>./public/assets/</code>. These decisions were made to make file reading and writing simpler for this specific scenario but you can always change them to whatever is better suited for your project.</p>
+<h3 id="the-configjs-file">The config.js file</h3>
+<p>We can put the decisions we made in a <code>config.js</code> file so we can access it from anywhere by just requiring it. I put them in a <code>dev</code> object because there are other properties which we will add later. So this is how it looks right now:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> config = {
+  <span class="hljs-attr">dev</span>: {
+    <span class="hljs-attr">postsdir</span>: <span class="hljs-string">"./content"</span>,
+    <span class="hljs-attr">outdir</span>: <span class="hljs-string">"./public"</span>
+  }
+};
+
+<span class="hljs-built_in">module</span>.exports = config;</code></pre>
+<h3 id="getting-the-posts">Getting the posts</h3>
+<p>Alright let&#39;s start first of all with getting all the posts from the content directory. We can do this using the <code>fs</code> api that node.js gives us. So first of all we import <code>fs</code> and create an instance of it:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"fs"</span>);</code></pre>
+<p>Now we can use the methods that <code>fs</code> provides in this syntax: <code>fs.methodName()</code>. For getting posts we can use the <code>readdirSync()</code> method that <code>fs</code> provides. So let&#39;s see how it would look if we just got all the posts and logged them to the console:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./config"</span>);
+
+<span class="hljs-keyword">const</span> posts = fs
+  .readdirSync(config.dev.postsdir)
+  .map(<span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> post.slice(<span class="hljs-number">0</span>, <span class="hljs-number">-3</span>));
+
+<span class="hljs-built_in">console</span>.log(posts);</code></pre>
+<p>Now run <code>npm run build</code> in your console and you should see a list of posts if you did everything right. The reason we use <code>slice()</code> in the code is to get rid of the <code>.md</code> extension. You&#39;ll see why we have to do that later on.</p>
+<h3 id="parsing-post-markdown">Parsing post markdown</h3>
+<p>If you remember in the beginning we installed an npm package called front-matter. It helps us extract yaml front-matter from files. What is yaml front-matter? Well it&#39;s this amazing thing that lets you add extra yaml data to your files using <code>---</code> before and after it to delimit it from the rest of the content. Here&#39;s an example of a blog post using yaml front-matter:</p>
+<pre><code class="language-markdown">---
+title: Post One
+date: "2020-02-28T22:19:00Z"
+<span class="hljs-section">description: My reasons for starting a blog.
+---</span>
+
+<span class="hljs-section"># This is an amazing blog post.</span>
+
+Really it's just great</code></pre>
+<p>So now since we&#39;ve gotten the posts in the previous step now we can parse them using <code>front-matter</code>. We&#39;re gonna put all of this post related code in <code>posts.js</code> so we have a cleaner working environment. So let&#39;s start off with getting the content from our files.</p>
+<p>We can do that using the provided <code>fs.readFile()</code> method. Here&#39;s how it would look just logging the content of the file to the console:</p>
+<pre><code>console.log(fs.readFileSync(&quot;./foo.md&quot;))</code></pre><p>But since we want reusable code that we can use for every single post in a loop, we&#39;ll put it in a function called <code>createPost()</code>. This function will use <code>front-matter</code> to take the content of the file and give us an object. This object will have the front-matter properties we set in a property called attributes &amp; the rest of the content will be in a property called body. We can use <code>front-matter</code> by creating an instance to it using require and then calling it on our data once we read it from the file.</p>
+<p>Here&#39;s how that would look like:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./config"</span>);
+<span class="hljs-keyword">const</span> marked = <span class="hljs-built_in">require</span>(<span class="hljs-string">"marked"</span>);
+
+<span class="hljs-keyword">const</span> createPost = <span class="hljs-function"><span class="hljs-params">postPath</span> =&gt;</span> {
+  <span class="hljs-keyword">const</span> data = fs.readFileSync(<span class="hljs-string">`<span class="hljs-subst">${config.dev.postsdir}</span>/<span class="hljs-subst">${postPath}</span>.md`</span>, <span class="hljs-string">"utf8"</span>);
+  <span class="hljs-keyword">const</span> content = fm(data);
+  content.body = marked(content.body);
+  content.path = postPath;
+  <span class="hljs-keyword">return</span> content;
+};
+
+<span class="hljs-built_in">module</span>.exports = createPost;</code></pre>
+<p>If you check out the code you&#39;ll see that I call marked on the body of our post. All this does is convert the markdown into HTML so we can easily display it in our website later. I&#39;ve also added the path of the post as an extra property because we will need it later on.</p>
+<p>Now let&#39;s use this method in <code>index.js</code> and just log the output:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./config"</span>);
+<span class="hljs-keyword">const</span> createPost = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./posts.js"</span>);
+
+<span class="hljs-keyword">const</span> posts = fs
+  .readdirSync(config.dev.postsdir)
+  .map(<span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> post.slice(<span class="hljs-number">0</span>, <span class="hljs-number">-3</span>))
+  .map(<span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> postMethods.createPost(post));
+
+<span class="hljs-built_in">console</span>.log(posts);</code></pre>
+<h3 id="configuring-marked-and-syntax-highlighting">Configuring marked and syntax highlighting</h3>
+<p>Since we would like to use highlight.js to highlight our code. We can do that using marked and it&#39;s configuration object. Make a file called <code>marked.js</code> and in that we&#39;ll create an instance of <code>marked</code> configure it and then export it. Here&#39;s how that looks:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> marked = <span class="hljs-built_in">require</span>(<span class="hljs-string">"marked"</span>);
+
+marked.setOptions({
+  <span class="hljs-attr">renderer</span>: <span class="hljs-keyword">new</span> marked.Renderer(),
+  <span class="hljs-attr">highlight</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">code, language</span>) </span>{
+    <span class="hljs-keyword">const</span> hljs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"highlight.js"</span>);
+    <span class="hljs-keyword">const</span> validLanguage = hljs.getLanguage(language) ? language : <span class="hljs-string">"plaintext"</span>;
+    <span class="hljs-keyword">return</span> hljs.highlight(validLanguage, code).value;
+  },
+  <span class="hljs-attr">pedantic</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">gfm</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">breaks</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">sanitize</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">smartLists</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">smartypants</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">xhtml</span>: <span class="hljs-literal">false</span>
+});
+
+<span class="hljs-built_in">module</span>.exports = marked;</code></pre>
+<p>So now every time you use <code>marked</code> require it from this file directly.</p>
+<h3 id="generating-post-html-pages">Generating post HTML pages</h3>
+<p>Now we start with the actual page generation. To start of, we want it to create the public folder, if it doesn&#39;t exist already, we can do that using the <code>fs.mkdirSync()</code> and <code>fs.existsSync()</code> functions. Let&#39;s add that to our <code>index.js</code> file:</p>
+<pre><code class="language-js"><span class="hljs-keyword">if</span> (!fs.existsSync(config.dev.outdir)) fs.mkdirSync(config.dev.outdir);</code></pre>
+<p>Now in our <code>posts.js</code> file let us make a <code>createPosts()</code> function, that will create and write the HTML files to the public directory. But before that we need a helper function called <code>posthtml</code> that will take the post JSON object and return a complete HTML page that we can simply write to a file. We will use the power of template literals to make our life easier in this function here&#39;s how it looks:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> posthtml = <span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> <span class="hljs-string">`
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8" /&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+        &lt;meta name="description" content="<span class="hljs-subst">${data.attributes.description}</span>" /&gt;
+        &lt;title&gt;<span class="hljs-subst">${data.attributes.title}</span>&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;header&gt;
+            &lt;a href="/"&gt;Go back home&lt;/a&gt;
+        &lt;/header&gt;
+        &lt;div class="content"&gt;
+                &lt;h1&gt;<span class="hljs-subst">${data.attributes.title}</span>&lt;/h1&gt;
+            &lt;p&gt;<span class="hljs-subst">${<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-built_in">parseInt</span>(data.attributes.date)).toDateString()}</span>&lt;/p&gt;
+            &lt;hr /&gt;
+            <span class="hljs-subst">${data.body}</span>
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+`</span>;</code></pre>
+<p>The reason I create a <code>new Date()</code> when adding the date to the post is so that all the dates have a consistent format. This is quite an opinionated way of doing it as it requires the date provided in the front-matter to be a &quot;number representing the milliseconds elapsed since the UNIX epoch&quot;. However I don&#39;t mind running a quick <code>Date.now()</code> in the browser dev tools to get that number before I post. You can change that in the code if you would like 🤷‍♀️.</p>
+<p>Now we can create a function called <code>createPosts()</code> that&#39;ll take the output of the <code>createPost()</code> function and generate an HTML file. Here&#39;s how it looks:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> createPosts = <span class="hljs-function"><span class="hljs-params">posts</span> =&gt;</span> {
+  posts.forEach(<span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> {
+    <span class="hljs-keyword">if</span> (!fs.existsSync(<span class="hljs-string">`<span class="hljs-subst">${config.dev.outdir}</span>/<span class="hljs-subst">${post.path}</span>`</span>))
+      fs.mkdirSync(<span class="hljs-string">`<span class="hljs-subst">${config.dev.outdir}</span>/<span class="hljs-subst">${post.path}</span>`</span>);
+
+    fs.writeFile(
+      <span class="hljs-string">`<span class="hljs-subst">${config.dev.outdir}</span>/<span class="hljs-subst">${post.path}</span>/index.html`</span>,
+      posthtml(post),
+      e =&gt; {
+        <span class="hljs-keyword">if</span> (e) <span class="hljs-keyword">throw</span> e;
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${post.path}</span>/index.html was created successfully`</span>);
+      }
+    );
+  });
+};
+
+<span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-attr">createPost</span>: createPost,
+  <span class="hljs-attr">createPosts</span>: createPosts
+};</code></pre>
+<p>As you can see it doesn&#39;t generate a file called <code>postname.html</code> but rather it makes a directory called <code>postname</code> and then adds and <code>index.html</code> in that directory so that the path for that post in the browser will be <code>yourwebsite/postname</code> not <code>yourwebsite/postname.html</code>.</p>
+<p>Now let&#39;s call it in <code>index.js</code> and see if it worked:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"fs"</span>);
+<span class="hljs-keyword">const</span> postMethods = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./posts"</span>);
+<span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./config"</span>);
+
+<span class="hljs-keyword">const</span> posts = fs
+  .readdirSync(config.dev.postsdir)
+  .map(<span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> post.slice(<span class="hljs-number">0</span>, <span class="hljs-number">-3</span>))
+  .map(<span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> postMethods.createPost(post));
+
+<span class="hljs-keyword">if</span> (!fs.existsSync(config.dev.outdir)) fs.mkdirSync(config.dev.outdir);
+
+postMethods.createPosts(posts);</code></pre>
+<p>If everything worked right you should&#39;ve seen a <code>public</code> directory pop up with a few directories in it (based on how many posts you had).</p>
+<h3 id="author-about-section">Author about section</h3>
+<p>This blog will also include a small about section in it&#39;s homepage for the author, so we need to add the info for that into our <code>config.js</code> file. So here&#39;s our revised <code>config.js</code> file:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> config = {
+  <span class="hljs-attr">blogName</span>: <span class="hljs-string">"Blog"</span>,
+  <span class="hljs-attr">blogDescription</span>: <span class="hljs-string">"Sharing what I learn as a web developer &amp; designer"</span>,
+  <span class="hljs-attr">authorName</span>: <span class="hljs-string">"Kartik Nair"</span>,
+  <span class="hljs-attr">authorDescription</span>:
+    <span class="hljs-string">"a web developer and designer making lot's of stuff in Dubai"</span>,
+  <span class="hljs-attr">authorTwitter</span>: <span class="hljs-string">"https://twitter.com/kartiknair"</span>,
+
+  <span class="hljs-attr">dev</span>: {
+    <span class="hljs-attr">postsdir</span>: <span class="hljs-string">"./content"</span>,
+    <span class="hljs-attr">outdir</span>: <span class="hljs-string">"./public"</span>
+  }
+};
+
+<span class="hljs-built_in">module</span>.exports = config;</code></pre>
+<h2 id="the-homepage">The homepage</h2>
+<p>The homepage will be the <code>index.html</code> file in the public directory. It should have a header with the blog&#39;s name and a small about section for the author. We can use template literals like we did before to generate the HTML for that. Let&#39;s call the function <code>homepage()</code> and put it in a file called <code>homepage.js</code> . Here&#39;s how that file looks now:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> homepage = <span class="hljs-function"><span class="hljs-params">posts</span> =&gt;</span> <span class="hljs-string">`
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8" /&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+        &lt;meta name="description" content="<span class="hljs-subst">${config.blogDescription}</span>" /&gt;
+        &lt;title&gt;<span class="hljs-subst">${config.blogName}</span>&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class="grotesk"&gt;
+            &lt;header&gt;
+                &lt;h1&gt;<span class="hljs-subst">${config.blogName}</span>&lt;/h1&gt;
+                &lt;p&gt;—&lt;/p&gt;
+                &lt;p&gt;This blog is written by <span class="hljs-subst">${config.authorName}</span>, <span class="hljs-subst">${
+  config.authorDescription
+}</span>. To find out what he's up to &lt;a href="<span class="hljs-subst">${
+  config.authorTwitter
+}</span>"&gt;follow him on twtter&lt;/a&gt;&lt;/p&gt;
+                &lt;hr /&gt;
+            &lt;/header&gt;
+
+            &lt;div class="posts"&gt;
+                <span class="hljs-subst">${posts
+                  .map(
+                    post =&gt; <span class="hljs-string">`&lt;div class="post"&gt;
+                    &lt;h3&gt;&lt;a href="./<span class="hljs-subst">${post.path}</span>"&gt;<span class="hljs-subst">${
+                      post.attributes.title
+                    }</span>&lt;/a&gt;&lt;/h3&gt;
+                        &lt;small&gt;<span class="hljs-subst">${<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(
+                          <span class="hljs-built_in">parseInt</span>(post.attributes.date)
+                        ).toDateString()}</span>&lt;/small&gt;
+                        &lt;p&gt;<span class="hljs-subst">${post.attributes.description}</span>&lt;/p&gt;
+                    &lt;/div&gt;`</span>
+                  )
+                  .join(<span class="hljs-string">""</span>)}</span>
+            &lt;/div&gt;
+
+            &lt;footer&gt;
+                <span class="hljs-subst">${<span class="hljs-string">`&lt;p&gt;© <span class="hljs-subst">${<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().getFullYear()}</span> <span class="hljs-subst">${
+                  config.authorName
+                }</span>, Find the code on &lt;a href="github.com/kartiknair/blog"&gt;GitHub&lt;/a&gt;&lt;/p&gt;`</span>}</span>
+            &lt;/footer&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+`</span>;</code></pre>
+<p>Now we need to actually create the file so we can add this HTML to it. We can make that a function called <code>addHomepage()</code> and also add that to the same file. Here&#39;s how it looks:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> addHomePage = <span class="hljs-function"><span class="hljs-params">posts</span> =&gt;</span> {
+  fs.writeFile(<span class="hljs-string">`<span class="hljs-subst">${config.dev.outdir}</span>/index.html`</span>, homepage(posts), e =&gt; {
+    <span class="hljs-keyword">if</span> (e) <span class="hljs-keyword">throw</span> e;
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`index.html was created successfully`</span>);
+  });
+};</code></pre>
+<p>Now we can simply export it out using <code>module.exports = addHomePage</code> and call it in our <code>index.js</code> file. Here&#39;s our revised <code>index.js</code> file:</p>
+<pre><code class="language-js"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"fs"</span>);
+<span class="hljs-keyword">const</span> postMethods = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./posts"</span>);
+<span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./config"</span>);
+<span class="hljs-keyword">const</span> addHomePage = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./homepage"</span>);
+
+<span class="hljs-keyword">const</span> posts = fs
+  .readdirSync(config.dev.postsdir)
+  .map(<span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> post.slice(<span class="hljs-number">0</span>, <span class="hljs-number">-3</span>))
+  .map(<span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> postMethods.createPost(post))
+  .sort(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">a, b</span>) </span>{
+    <span class="hljs-keyword">return</span> b.attributes.date - a.attributes.date;
+  });
+
+<span class="hljs-keyword">if</span> (!fs.existsSync(config.dev.outdir)) fs.mkdirSync(config.dev.outdir);
+
+postMethods.createPosts(posts);
+addHomePage(posts);</code></pre>
+<p>As you can see I also sorted the posts by latest date so that the latest post is first.</p>
+<h3 id="the-assets-directory">The assets directory</h3>
+<p>We can store any files that we don&#39;t want touched by the generator in <code>./public/assets</code>. For example if you wanted to add styling to this blog you could add the following to your homepage function:</p>
+<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"./assets/main.css"</span> /&gt;</span></code></pre>
+<p>and now you can style your blog as you like. Images also work in the same way, for example if in a post markdown file you wanted to add an image you could do the following:</p>
+<pre><code class="language-markdown">Here's an image:
+![<span class="hljs-string">Wow look at this beautiful thing</span>](<span class="hljs-link">../assets/images/wow.png</span>)</code></pre>
+<h3 id="making-it-look-pretty">Making it look pretty</h3>
+<p>Ah! Now my favourite part, it&#39;s time to make it look nice. I don&#39;t know about you but looking at those default HTML styles was hurting me a lot. To make my life simple I&#39;m just gonna plug <a href="https://grotesk.now.sh">grotesk</a> into the project &amp; customize it. Here&#39;s the <code>./public/assets/styles/main.css</code> file:</p>
+<pre><code class="language-css"><span class="hljs-selector-pseudo">:root</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-number">0.75rem</span> + <span class="hljs-number">0.5vw</span>);
+}
+
+<span class="hljs-selector-class">.grotesk</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">60%</span>;
+  <span class="hljs-attribute">margin</span>: <span class="hljs-number">5%</span> <span class="hljs-number">20%</span> <span class="hljs-number">0</span> <span class="hljs-number">20%</span>;
+}
+
+<span class="hljs-keyword">@media</span> (<span class="hljs-attribute">max-width:</span> <span class="hljs-number">500px</span>) {
+  <span class="hljs-selector-class">.grotesk</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">80%</span>;
+    <span class="hljs-attribute">margin</span>: <span class="hljs-number">8%</span> <span class="hljs-number">10%</span> <span class="hljs-number">0</span> <span class="hljs-number">10%</span>;
+  }
+}
+
+<span class="hljs-selector-tag">img</span> {
+  <span class="hljs-attribute">max-width</span>: <span class="hljs-number">100%</span>;
+}</code></pre>
+<p>As you can see I&#39;ve decided to go with fluid type for this project. I also brought in <code>grotesk.light.scss</code> and customized the variables. Here&#39;s how the variables look now:</p>
+<pre><code class="language-scss"><span class="hljs-variable">$bg</span>: <span class="hljs-number">#1e3b5a</span>;
+<span class="hljs-variable">$fg-body</span>: <span class="hljs-number">#99b7c3</span>;
+<span class="hljs-variable">$fg-headings</span>: <span class="hljs-number">#c1d6df</span>;
+
+<span class="hljs-variable">$hr-color</span>: rgba(<span class="hljs-number">153</span>, <span class="hljs-number">183</span>, <span class="hljs-number">195</span>, <span class="hljs-number">0.2</span>);
+
+<span class="hljs-variable">$a-color</span>: <span class="hljs-number">#d8e9f0</span>;
+
+<span class="hljs-variable">$pre-bg</span>: rgba(<span class="hljs-number">153</span>, <span class="hljs-number">183</span>, <span class="hljs-number">195</span>, <span class="hljs-number">0.07</span>);
+<span class="hljs-variable">$pre-color</span>: <span class="hljs-variable">$fg-body</span>;
+
+<span class="hljs-variable">$inline-code-bg</span>: rgba(<span class="hljs-number">153</span>, <span class="hljs-number">183</span>, <span class="hljs-number">195</span>, <span class="hljs-number">0.07</span>);
+<span class="hljs-variable">$inline-code-color</span>: <span class="hljs-number">#c1d6df</span>;
+
+<span class="hljs-variable">$quote-bg</span>: <span class="hljs-variable">$bg</span>;
+<span class="hljs-variable">$quote-border</span>: <span class="hljs-number">#8a4baf</span>;
+<span class="hljs-variable">$quote-color</span>: <span class="hljs-number">#6a727c</span>;</code></pre>
+<p>I also customized the <code>fonts.scss</code> file that came with grotesk. Here&#39;s how it looks like now:</p>
+<pre><code class="language-css"><span class="hljs-keyword">@font-face</span> {
+  <span class="hljs-attribute">font-family</span>: lyon;
+  <span class="hljs-attribute">src</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">"../fonts/LyonDisplay-Bold.otf"</span>);
+  <span class="hljs-attribute">font-weight</span>: <span class="hljs-number">800</span>;
+}
+
+<span class="hljs-keyword">@import</span> url(<span class="hljs-string">"https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&amp;display=swap"</span>);</code></pre>
+<p>$font-fam-main: &quot;EB Garamond&quot;, serif;
+$font-fam-headings: lyon, serif;
+$font-fam-mono: Menlo, Monaco, Consolas, &quot;Liberation Mono&quot;, &quot;Courier New&quot;,
+    monospace;
+$line-ht-main: 1.5;
+$line-ht-mono: 1;</p>
+<p>As you can see I&#39;ve imported two fonts for this blog. Lyon Display which is locally hosted &amp; EB Garamond which is a Google Font.</p>
+<p>That&#39;s it for the styling. It ended up looking way better than I expected you can check it out live <a href="https://blog.kartikn.me">here</a>, but if you don&#39;t wanna visit it live here&#39;s an image:</p>
+<p><img src="../assets/images/node-ssg-2.png" alt="An image of the final result"></p>
+<h3 id="hosting">Hosting</h3>
+<p>I personally like using <a href="https://now.sh">Zeit Now</a> for hosting but some other free options I like as well are <a href="https://netlify.com">Netlify</a> and <a href="https://github.io">GitHub Pages</a>. Since <code>now</code> integrates so well with npm build scripts that output to a public directory, all I had to do was run <code>now --prod</code> in the root of the directory (when you run it the first time it&#39;ll ask you some configuration questions the default answer to all of them is fine). Now everytime I want to update my blog all I have to run is <code>now --prod</code> again and it&#39;ll update my blog and run <code>npm run build</code> by default.</p>
+<h3 id="final-thoughts">Final Thoughts</h3>
+<p>Thanks for reading this very long article. I hope you learnt a little something about nodejs. I personally learnt a lot about the <code>fs</code> api and enjoyed making this a lot. I liked it so much that I actually ended up switching my personal blog from gatsby to this. That might be a bad decision but I can always work it out later. Just a reminder you can find all the source code on GitHub so feel free to fork it or open an issue if you find something wrong.</p>
+<p>I&#39;m gonna keep working on this to fine tune it to my needs, and maybe experiment with a few different things like maybe <a href="https://github.com/polymer/lit-html">lit-html</a> or <a href="https://github.com/janl/mustache.js/">mustache</a> for templating. But for now that&#39;s it for this post, see you in another one very soon. Peace ✌</p>
+
+            </div>
+
+            <footer>
+                <p>© 2020 Kartik Nair, Find the code on <a href="github.com/kartiknair/blog">GitHub</a></p>
+            </footer>
+        </div>
+    </body>
+</html>
