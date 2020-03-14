@@ -126,7 +126,9 @@ So now since we've gotten the posts in the previous step now we can parse them u
 
 We can do that using the provided `fs.readFile()` method. Here's how it would look just logging the content of the file to the console:
 
-    console.log(fs.readFileSync("./foo.md"))
+```js
+console.log(fs.readFileSync("./foo.md"));
+```
 
 But since we want reusable code that we can use for every single post in a loop, we'll put it in a function called `createPost()`. This function will use `front-matter` to take the content of the file and give us an object. This object will have the front-matter properties we set in a property called attributes & the rest of the content will be in a property called body. We can use `front-matter` by creating an instance to it using require and then calling it on our data once we read it from the file.
 
@@ -134,6 +136,7 @@ Here's how that would look like:
 
 ```js
 const config = require("./config");
+const fm = require("front-matter");
 const marked = require("marked");
 
 const createPost = postPath => {
@@ -296,7 +299,7 @@ const config = {
 module.exports = config;
 ```
 
-## The homepage
+### The homepage
 
 The homepage will be the `index.html` file in the public directory. It should have a header with the blog's name and a small about section for the author. We can use template literals like we did before to generate the HTML for that. Let's call the function `homepage()` and put it in a file called `homepage.js` . Here's how that file looks now:
 
@@ -469,9 +472,7 @@ $line-ht-mono: 1;
 
 As you can see I've imported two fonts for this blog. Lyon Display which is locally hosted & EB Garamond which is a Google Font.
 
-That's it for the styling. It ended up looking way better than I expected you can check it out live [here](https://blog.kartikn.me), but if you don't wanna visit it live here's an image:
-
-![An image of the final result](../assets/images/node-ssg-2.png)
+That's it for the styling. It ended up looking way better than I expected & you can see the final result right here. Since your reading this on my blog!
 
 ### Hosting
 
