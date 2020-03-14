@@ -25,7 +25,11 @@ mkdir node-ssg && cd node-ssg
 npm init -y
 ```
 
-Now we're gonna install some packages that are gonna make our life a hell of a lot easier while dealing with the data. The packages are: **front-matter** for extracting the yaml front matter from our posts, **marked** for converting markdown to html, and **highlight.js** for syntax highlighting in code. We can install all of these using the following command:
+Now we're gonna install some packages that are gonna make our life a hell of a lot easier while dealing with the data. The packages are:
+
+- **front-matter** for extracting the yaml front matter from our posts
+- **marked** for converting markdown to html
+- **highlight.js** for syntax highlighting in code. We can install all of these using the following command:
 
 ```bash
 npm i front-matter marked highlight.js
