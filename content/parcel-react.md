@@ -1,3 +1,9 @@
+---
+title: My new react workflow with parcel
+date: 1585920436498
+description: Moving away from create-react-app & learning to bundle my own assets
+---
+
 Hello everybody 👋, I hope you’re staying safe out there in these trying times. I haven’t written anything in a while due to this situation but I thought why not share my new react workflow since some people might find it interesting, so here we go.
 
 I’ve almost always used create-react-app as my react starter, sometimes Gatsby or Next.js for Static Sites & Server Side Rendering respectively, but mostly create-react-app for all my Single Page Apps. However as some of you might know the internals of create-react-app are abstracted away using the react-scripts package. This helps beginners like me get easily started without having to worry about webpack. But I was curious on how it actually worked and decided to make a react application from scratch.
@@ -26,7 +32,7 @@ npm init -y
 npm i -D parcel-bundler @babel/core @babel/preset-env @babel/preset-reactnpm i react react-dom
 ```
 
-As you can see we initialize an npm project using `npm init` the `-y` flag is just there so it doesn't ask you the default questions. Then we install parcel-bundler and a few babel packages as dev dependencies (that's why the `-D` flag is used) and also `react` & `react-dom` as regular dependencies. I'm currently still using parcel v1 (i.e the parcel-bundler npm package not parcel) that's because parcel v2 is still in alpha and not yet stable. However once it is stable it promises some amazing features like out of the box support for jsx so we wouldn't even have to configure babel. 
+As you can see we initialize an npm project using `npm init` the `-y` flag is just there so it doesn't ask you the default questions. Then we install parcel-bundler and a few babel packages as dev dependencies (that's why the `-D` flag is used) and also `react` & `react-dom` as regular dependencies. I'm currently still using parcel v1 (i.e the parcel-bundler npm package not parcel) that's because parcel v2 is still in alpha and not yet stable. However once it is stable it promises some amazing features like out of the box support for jsx so we wouldn't even have to configure babel.
 
 ## Step 3
 
@@ -105,7 +111,7 @@ We're almost done! Now go to your `package.json` and add the `start` & the `buil
   "license": "ISC",
   "dependencies": {
     "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -139,4 +145,4 @@ Creating `parcreate` was a lot of fun and I will be adding more templates with a
 
 You can find the github repo for parcreate [here](https://github.com/kartiknair/parcreate) and please let me know if you face any issues running it as I've only tested it on windows yet. Thank you all for reading about my findings & be sure to stay safe. Bye!
 
-P.S. I’m trying to be more active on social media & meet more people so drop me a message on my twitter (@nairkartik_).
+P.S. I’m trying to be more active on social media & meet more people so drop me a message on my twitter (@nairkartik\_).
