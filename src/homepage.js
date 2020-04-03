@@ -42,7 +42,7 @@ const homepage = posts => `
             <footer>
               ${`<p>© ${new Date().getFullYear()} ${
                 config.authorName
-              }, Find the code on <a href="github.com/kartiknair/blog">GitHub</a></p>`}
+              }, Find the code on <a href="https://github.com/kartiknair/blog">GitHub</a></p>`}
             </footer>
         </div>
     </body>
