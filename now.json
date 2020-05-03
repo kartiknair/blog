@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/", "destination": "https://kartikn.me/writing" },
+    { "source": "/:slug", "destination": "https://kartikn.me/writing/:slug" }
+  ]
+}
